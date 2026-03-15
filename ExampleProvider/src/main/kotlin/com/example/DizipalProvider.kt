@@ -22,7 +22,7 @@ class DizipalProvider : MainAPI() {
             val items = document.select(selector).mapNotNull { it.toSearchResult() }
             HomePageList(title, items)
         }
-        return HomePageResponse(home)
+        return newHomePageResponse(request.name, home)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -52,10 +52,9 @@ class DizipalProvider : MainAPI() {
             }
         } else {
             val episodes = document.select("div.episode-list a").map {
-                Episode(
-                    data = it.attr("href"),
-                    name = it.text().trim()
-                )
+                newEpisode(it.attr("href")) {
+                    this.name = it.text().trim()
+                }
             }
             newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
@@ -73,9 +72,8 @@ class DizipalProvider : MainAPI() {
     ): Boolean {
         val document = app.get(data).document
 
-        // Dizipal often uses multiple video players (alternatives)
         document.select("div.video-player-options a").forEach {
-            val playerUrl = it.attr("data-url") // Adjust selector based on actual site structure
+            val playerUrl = it.attr("data-url")
             if (playerUrl.isNotEmpty()) {
                 loadExtractor(playerUrl, data, subtitleCallback, callback)
             }

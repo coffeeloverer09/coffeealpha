@@ -22,7 +22,7 @@ class HdFilmCehennemiProvider : MainAPI() {
             val items = document.select(selector).mapNotNull { it.toSearchResult() }
             HomePageList(title, items)
         }
-        return HomePageResponse(home)
+        return newHomePageResponse(request.name, home)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -41,7 +41,7 @@ class HdFilmCehennemiProvider : MainAPI() {
         val poster = document.selectFirst("div.poster img")?.attr("src")
         val description = document.selectFirst("div.film-ozeti p")?.text() ?: document.selectFirst("div.storyline")?.text()
         val year = document.selectFirst("div.film-bilgileri span:contains(Yıl) + a")?.text()?.toIntOrNull()
-        val rating = document.selectFirst("span.imdb-puan")?.text()?.replace(",", ".")?.toLongOrNull()?.times(10)
+        val rating = document.selectFirst("span.imdb-puan")?.text()?.replace(",", ".")?.toDoubleOrNull()
 
         val isMovie = !url.contains("/dizi-izle/")
 
@@ -54,10 +54,9 @@ class HdFilmCehennemiProvider : MainAPI() {
             }
         } else {
             val episodes = document.select("div.bolum-listesi a").map {
-                Episode(
-                    data = it.attr("href"),
-                    name = it.text().trim()
-                )
+                newEpisode(it.attr("href")) {
+                    this.name = it.text().trim()
+                }
             }
             newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
