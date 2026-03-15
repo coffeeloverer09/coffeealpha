@@ -7,10 +7,8 @@ dependencies {
 version = 1
 
 cloudstream {
-    // All of these properties are optional, you can safely remove any of them.
-
-    description = "Lorem ipsum"
-    authors = listOf("Cloudburst", "Luna712")
+    description = "HDFilmCehennemi and Dizipal Providers"
+    authors = listOf("Cloudstream Developer") // Replace with your GitHub username
 
     /**
     * Status int as one of the following:
@@ -19,15 +17,15 @@ cloudstream {
     * 2: Slow
     * 3: Beta-only
     **/
-    status = 1 // Will be 3 if unspecified
+    status = 1 
 
-    tvTypes = listOf("Movie")
+    tvTypes = listOf("Movie", "TvSeries", "Anime")
 
     requiresResources = true
-    language = "en"
+    language = "tr"
 
-    // Random CC logo I found
-    iconUrl = "https://upload.wikimedia.org/wikipedia/commons/2/2f/Korduene_Logo.png"
+    // Optional: Add a general icon for your plugin collection
+    iconUrl = "https://www.hdfilmcehennemi.nl/favicon.ico"
 }
 
 android {

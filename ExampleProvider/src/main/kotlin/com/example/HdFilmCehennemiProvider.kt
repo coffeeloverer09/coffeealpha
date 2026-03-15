@@ -26,7 +26,6 @@ class HdFilmCehennemiProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        // HDFilmCehennemi uses a /search/query format
         val url = "$mainUrl/search/$query/"
         val document = app.get(url).document
         
@@ -54,7 +53,6 @@ class HdFilmCehennemiProvider : MainAPI() {
                 this.rating = rating?.toInt()
             }
         } else {
-            // TV Series logic for HDFilmCehennemi
             val episodes = document.select("div.bolum-listesi a").map {
                 Episode(
                     data = it.attr("href"),
@@ -78,11 +76,9 @@ class HdFilmCehennemiProvider : MainAPI() {
     ): Boolean {
         val document = app.get(data).document
 
-        // Scrape video player sources
         document.select("nav.video-nav a").forEach {
             val playerUrl = it.attr("data-video")
             if (playerUrl.isNotEmpty()) {
-                // Many players on this site are supported by Cloudstream's extractors
                 loadExtractor(playerUrl, data, subtitleCallback, callback)
             }
         }
